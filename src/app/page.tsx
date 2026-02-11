@@ -8,9 +8,10 @@ export default function HomePage() {
         <p className="text-sm tracking-[0.25em] text-amber-300">PREMIUM BARBERSHOP</p>
         <h1 className="text-5xl font-black tracking-wider">ROYAL CUT</h1>
         <p className="mx-auto max-w-2xl text-zinc-300">Sharp cuts. Smooth fades. Grooming fit for kings.</p>
-        <div className="flex justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3">
           <Link href="/book" className="btn-primary">Book Appointment</Link>
-          <Link href="https://maps.google.com/?q=Royal+Cut+Barbershop" className="btn-secondary" target="_blank">Google Maps</Link>
+          <Link href="https://maps.app.goo.gl/om6gfeHcqcaDM8sJ6?g_st=ic" className="btn-secondary" target="_blank">Google Maps</Link>
+          <Link href="https://www.instagram.com/royal.cut.ca?igsh=MTRxcTVqa2lmbTR3cA==" className="btn-secondary" target="_blank">Instagram</Link>
         </div>
       </section>
 
