@@ -20,35 +20,78 @@ export default function AdminBookingsPage() {
     show(`Booking marked ${status}`);
   };
 
-  const getName = (id: string, type: "service" | "barber") => type === "service" ? services.find((x) => x.id === id)?.name : barbers.find((x) => x.id === id)?.name;
+  const getName = (id: string, type: "service" | "barber") =>
+    type === "service" ? services.find((x) => x.id === id)?.name : barbers.find((x) => x.id === id)?.name;
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Bookings</h1>
-      <div className="flex flex-wrap gap-2">{["all", ...statuses].map((s) => <button key={s} onClick={() => setStatusFilter(s as BookingStatus | "all")} className={statusFilter === s ? "btn-primary" : "btn-secondary"}>{s}</button>)}</div>
+    <div className="space-y-5">
       <div className="space-y-2">
-        {filtered.map((b) => (
-          <button key={b.id} className="card w-full text-left" onClick={() => setActive(b)}>
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="font-semibold">{b.customerName}</p>
-              <span className="rounded bg-zinc-800 px-2 py-1 text-xs">{b.status}</span>
-            </div>
-            <p className="text-sm text-zinc-400">{b.date} {b.time} • {getName(b.serviceId, "service")} • {getName(b.barberId, "barber")}</p>
+        <h1 className="page-title">Bookings</h1>
+        <p className="page-subtitle">Review appointments and update booking statuses.</p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {["all", ...statuses].map((s) => (
+          <button key={s} onClick={() => setStatusFilter(s as BookingStatus | "all")} className={statusFilter === s ? "btn-primary" : "btn-secondary"}>
+            {s}
           </button>
         ))}
       </div>
 
+      <div className="table-wrap">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Service</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((b) => (
+              <tr key={b.id} className="cursor-pointer transition hover:bg-zinc-900/70" onClick={() => setActive(b)}>
+                <td>
+                  <p className="font-medium text-zinc-100">{b.customerName}</p>
+                  <p className="text-xs text-zinc-500">{b.phone}</p>
+                </td>
+                <td>{b.date} {b.time}</td>
+                <td>{getName(b.serviceId, "service")}</td>
+                <td><span className="chip">{b.status}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       {active && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4">
-          <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-900 p-4">
+        <div className="modal-backdrop">
+          <div className="modal-panel max-w-lg">
             <h2 className="text-lg font-bold">Booking Detail</h2>
-            <p className="mt-2 text-sm">Customer: {active.customerName}</p>
-            <p className="text-sm">Phone: {active.phone}</p>
-            <p className="text-sm">Service: {getName(active.serviceId, "service")}</p>
-            <p className="text-sm">Barber: {getName(active.barberId, "barber")}</p>
-            <p className="text-sm">Status: {active.status}</p>
-            <div className="mt-4 flex flex-wrap gap-2">{statuses.map((s) => <button key={s} className="btn-secondary" onClick={() => { setStatus(active.id, s); setActive({ ...active, status: s }); }}>{s}</button>)}</div>
-            <button className="btn-primary mt-4 w-full" onClick={() => setActive(null)}>Close</button>
+            <div className="mt-3 space-y-1.5 text-sm text-zinc-300">
+              <p><span className="text-zinc-500">Customer:</span> {active.customerName}</p>
+              <p><span className="text-zinc-500">Phone:</span> {active.phone}</p>
+              <p><span className="text-zinc-500">Service:</span> {getName(active.serviceId, "service")}</p>
+              <p><span className="text-zinc-500">Barber:</span> {getName(active.barberId, "barber")}</p>
+              <p><span className="text-zinc-500">Status:</span> {active.status}</p>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {statuses.map((s) => (
+                <button
+                  key={s}
+                  className={active.status === s ? "btn-primary" : "btn-secondary"}
+                  onClick={() => {
+                    setStatus(active.id, s);
+                    setActive({ ...active, status: s });
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+
+            <button className="btn-secondary mt-4 w-full" onClick={() => setActive(null)}>Close</button>
           </div>
         </div>
       )}

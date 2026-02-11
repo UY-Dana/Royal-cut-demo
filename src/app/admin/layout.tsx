@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, BookOpen, Users, Image, Settings, Menu } from "lucide-react";
+import { LayoutDashboard, BookOpen, Users, Image, Settings, Menu, X } from "lucide-react";
 import { getRole } from "@/lib/storage";
 import { useEffect, useState } from "react";
 
@@ -24,28 +24,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [router]);
 
   return (
-    <div className="grid min-h-[70vh] md:grid-cols-[220px_1fr]">
-      <aside className={`${open ? "block" : "hidden"} border-r border-zinc-800 bg-zinc-900 p-3 md:block`}>
-        <h2 className="mb-4 text-sm font-bold tracking-widest text-amber-300">ADMIN PANEL</h2>
+    <div className="grid min-h-[70vh] gap-4 md:grid-cols-[248px_1fr] md:gap-6">
+      <button className="btn-secondary flex w-fit items-center gap-2 md:hidden" onClick={() => setOpen((s) => !s)}>
+        {open ? <X size={16} /> : <Menu size={16} />} Menu
+      </button>
+
+      {open && <button className="fixed inset-0 z-30 bg-black/50 md:hidden" aria-label="Close menu" onClick={() => setOpen(false)} />}
+
+      <aside className={`card fixed left-4 right-4 top-24 z-40 p-3 md:static md:block ${open ? "block" : "hidden"}`}>
+        <h2 className="mb-3 text-xs font-semibold tracking-[0.28em] text-amber-200">ADMIN PANEL</h2>
         <nav className="space-y-1">
           {links.map((l) => {
             const Icon = l.icon;
             const active = path === l.href;
             return (
-              <Link key={l.href} href={l.href} className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm ${active ? "bg-amber-400/20 text-amber-300" : "hover:bg-zinc-800"}`} onClick={() => setOpen(false)}>
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${
+                  active
+                    ? "border border-amber-200/25 bg-amber-300/15 text-amber-100"
+                    : "border border-transparent text-zinc-300 hover:border-zinc-700 hover:bg-zinc-900/70 hover:text-zinc-100"
+                }`}
+                onClick={() => setOpen(false)}
+              >
                 <Icon size={16} /> {l.label}
               </Link>
             );
           })}
         </nav>
       </aside>
-      <section>
-        <div className="mb-4 flex items-center justify-between border-b border-zinc-800 pb-3 md:hidden">
-          <button className="btn-secondary" onClick={() => setOpen((s) => !s)}><Menu size={16} /></button>
-          <span className="text-sm text-zinc-400">Royal Cut Admin</span>
-        </div>
-        {children}
-      </section>
+
+      <section className="space-y-4">{children}</section>
     </div>
   );
 }

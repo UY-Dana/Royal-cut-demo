@@ -13,9 +13,13 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md space-y-4">
-      <h1 className="text-3xl font-bold">Staff Login</h1>
+      <div className="space-y-2">
+        <span className="chip">Internal Access</span>
+        <h1 className="page-title">Staff Login</h1>
+      </div>
+
       <div className="card space-y-3">
-        <p className="text-zinc-300">Demo-only login. Pick a role:</p>
+        <p className="text-sm text-zinc-300">Demo-only login. Pick a role:</p>
         <button className="btn-primary w-full" onClick={() => handle("admin")}>Login as Admin</button>
         <button className="btn-secondary w-full" onClick={() => handle("staff")}>Login as Staff</button>
       </div>
